@@ -1,12 +1,16 @@
 package com.apigateway.core.context;
 
+import cn.hutool.core.util.ReferenceUtil;
 import com.apigateway.common.rule.Rule;
 import com.apigateway.common.util.AssertUtil;
 import com.apigateway.core.request.GatewayRequest;
 import com.apigateway.core.response.GatewayResponse;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.util.ReferenceCountUtil;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
+
+import java.util.Optional;
 
 /**
  */
@@ -77,4 +81,71 @@ public class GatewayContext extends  BaseContext{
 
 /*    public <T> T getRequireAttribute(String key){
     }*/
+
+    /**
+     * 获取指定key的上下文参数,如果没有就返回默认值
+     * @param key
+     * @param defaultValue
+     * @return
+     * @param <T>
+     */
+    public <T> T getRequireAttribute(String key, T defaultValue) {
+        return (T) attributes.getOrDefault(key, defaultValue);
+    }
+
+    public Optional<Rule.FilterConfig> getFilterConfig(String filterId){
+        return rule.getFilterConfigById(filterId);
+    }
+
+    /**
+     * 获取服务id
+     * @return
+     */
+    public String getUniqueId(){
+        return request.getUniqueId();
+    }
+
+
+    /**
+     * 真正的释放资源
+     * @return
+     */
+    @Override
+    public boolean releaseRequest() {
+        if(requestReleased.compareAndSet(false,true)){
+            ReferenceCountUtil.release(request.getFullHttpRequest());
+        }
+        return true;
+    }
+
+    /**
+     * 获取原始请求对象
+     * @return
+     */
+    public GatewayRequest getOriginRequest(){
+        return request;
+    }
+
+    public void setRequest(GatewayRequest request) {
+        this.request = request;
+    }
+
+    @Override
+    public GatewayResponse getResponse() {
+        return response;
+    }
+
+    @Override
+    public void setResponse(Object response) {
+        this.response = (GatewayResponse) response;
+    }
+
+    public Rule getRule() {
+        return rule;
+    }
+
+    @Override
+    public GatewayRequest getRequest() {
+        return request;
+    }
 }

@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.util.internal.StringUtil;
+import lombok.Builder;
 import lombok.Getter;
 import org.asynchttpclient.Request;
 import org.asynchttpclient.RequestBuilder;
@@ -16,6 +17,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 @Getter
+@Builder
 public class GatewayRequest implements IGatewayRequest {
 
     /**

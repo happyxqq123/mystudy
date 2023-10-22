@@ -122,7 +122,7 @@ public class BaseContext implements IContext{
 
     @Override
     public boolean releaseRequest() {
-        return false;
+        return requestReleased.compareAndSet(false,true);
     }
 
     @Override

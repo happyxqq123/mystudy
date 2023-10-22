@@ -4,6 +4,9 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.function.Consumer;
 
+/**
+ *
+ */
 public interface IContext {
 
     /**
